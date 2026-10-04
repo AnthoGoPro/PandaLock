@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PandaLock</title>
+  <meta name="description" content="PandaLock: a password strength checker with a cyber panda who teaches you how hackers think.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <h1 class="logo">Panda<span>Lock</span></h1>
+    <p class="tagline">How long would it take a hacker to crack your password?</p>
+  </header>
+
+  <main class="layout">
+    <!-- Left side: the panda -->
+    <section class="panda-side">
+      <div class="bubble" id="bubble" aria-live="polite">Go ahead and type. I'm not looking, and I never save anything.</div>
+
+      <div class="panda state-idle" id="panda">
+        <svg viewBox="0 0 240 290" role="img" aria-label="PandaLock's cyber panda mascot">
+          <defs>
+            <clipPath id="lens-clip">
+              <rect x="72" y="99" width="44" height="28" rx="9"/>
+              <rect x="124" y="99" width="44" height="28" rx="9"/>
+            </clipPath>
+            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="2.5" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <ellipse class="shadow" cx="120" cy="282" rx="70" ry="7"/>
+
+          <g class="bob">
+            <!-- Ears poking out of the hood -->
+            <circle class="ear" cx="60" cy="40" r="22"/>
+            <circle class="ear" cx="180" cy="40" r="22"/>
+
+            <!-- Hoodie body -->
+            <rect class="hoodie" x="50" y="168" width="140" height="110" rx="42"/>
+            <path class="circuit" d="M64 250 h18 l8 -8 h10 M176 250 h-18 l-8 -8 h-10 M70 205 h12 l6 6"/>
+            <line class="string" x1="104" y1="182" x2="100" y2="216"/>
+            <line class="string" x1="136" y1="182" x2="140" y2="216"/>
+            <circle class="string-tip" cx="100" cy="219" r="3"/>
+            <circle class="string-tip" cx="140" cy="219" r="3"/>
+            <!-- Lock logo on the chest -->
+            <g class="chest-lock" filter="url(#glow)">
+              <path d="M113 238 v-6 a7 7 0 0 1 14 0 v6"/>
+              <rect x="109" y="238" width="22" height="17" rx="3"/>
+              <circle cx="120" cy="246" r="2"/>
+            </g>
+
+            <!-- Hood and head -->
+            <circle class="hood" cx="120" cy="112" r="84"/>
+            <circle class="hood-trim" cx="120" cy="118" r="66"/>
+            <circle class="head" cx="120" cy="118" r="60"/>
+
+            <!-- Eye patches -->
+            <ellipse class="patch" cx="95" cy="114" rx="17" ry="21" transform="rotate(-22 95 114)"/>
+            <ellipse class="patch" cx="145" cy="114" rx="17" ry="21" transform="rotate(22 145 114)"/>
+
+            <!-- Glowing eyes -->
+            <g class="eyes" filter="url(#glow)">
+              <circle class="eye" cx="96" cy="113" r="5"/>
+              <circle class="eye" cx="144" cy="113" r="5"/>
+            </g>
+
+            <!-- Eyebrows -->
+            <path class="brow brow-left" d="M80 92 Q94 86 108 91"/>
+            <path class="brow brow-right" d="M132 91 Q146 86 160 92"/>
+
+            <!-- Hacker glasses -->
+            <g class="glasses">
+              <line class="glasses-arm" x1="72" y1="108" x2="60" y2="104"/>
+              <line class="glasses-arm" x1="168" y1="108" x2="180" y2="104"/>
+              <rect class="lens" x="72" y="99" width="44" height="28" rx="9"/>
+              <rect class="lens" x="124" y="99" width="44" height="28" rx="9"/>
+              <line class="glasses-bridge" x1="116" y1="109" x2="124" y2="109"/>
+              <g clip-path="url(#lens-clip)">
+                <rect class="glint" x="40" y="90" width="10" height="50" transform="skewX(-25)"/>
+              </g>
+            </g>
+
+            <!-- Nose and mouths (only one mouth shows at a time) -->
+            <ellipse class="nose" cx="120" cy="139" rx="7" ry="5"/>
+            <path class="mouth mouth-idle" d="M110 150 Q120 157 130 150"/>
+            <path class="mouth mouth-safe" d="M105 148 Q120 165 135 148"/>
+            <path class="mouth mouth-warn" d="M106 154 Q113 149 120 154 Q127 159 134 154"/>
+            <path class="mouth mouth-danger" d="M107 158 Q120 145 133 158"/>
+
+            <!-- Blush for happy panda -->
+            <circle class="blush" cx="84" cy="146" r="7"/>
+            <circle class="blush" cx="156" cy="146" r="7"/>
+
+            <!-- Sweat drop for worried panda -->
+            <path class="sweat" d="M176 84 Q183 97 176 102 Q169 97 176 84 Z"/>
+
+            <!-- Sparkles for happy panda -->
+            <g class="sparkles" filter="url(#glow)">
+              <path class="sparkle" d="M200 70 l3 8 8 3 -8 3 -3 8 -3 -8 -8 -3 8 -3 Z"/>
+              <path class="sparkle" d="M34 96 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 Z"/>
+              <path class="sparkle" d="M196 140 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 Z"/>
+            </g>
+
+            <!-- Paws (they move up to cover the eyes while you type) -->
+            <g class="paw paw-left">
+              <ellipse cx="60" cy="214" rx="18" ry="15"/>
+              <circle class="pad" cx="54" cy="208" r="2.5"/>
+              <circle class="pad" cx="60" cy="205" r="2.5"/>
+              <circle class="pad" cx="66" cy="208" r="2.5"/>
+            </g>
+            <g class="paw paw-right">
+              <ellipse cx="180" cy="214" rx="18" ry="15"/>
+              <circle class="pad" cx="174" cy="208" r="2.5"/>
+              <circle class="pad" cx="180" cy="205" r="2.5"/>
+              <circle class="pad" cx="186" cy="208" r="2.5"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+
+      <div class="tip-box">
+        <div class="tip-head">
+          <span class="tip-title">// Panda tip</span>
+          <button type="button" class="tip-btn" id="tip-btn">New tip</button>
+        </div>
+        <p id="tip-text">Loading a tip...</p>
+      </div>
+    </section>
+
+    <!-- Right side: the checker -->
+    <section class="card">
+      <label for="password" class="field-label">Enter a password to check</label>
+      <div class="field">
+        <input type="password" id="password" maxlength="128" autocomplete="off"
+               autocapitalize="off" spellcheck="false" placeholder="Type a password...">
+        <button type="button" class="toggle" id="toggle" aria-pressed="false">Show</button>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">Average time to crack</div>
+        <div class="stat-value" id="crack-time">--</div>
+        <div class="stat-note" id="universe-note"></div>
+      </div>
+
+      <div class="meter" aria-hidden="true"><div class="meter-fill" id="meter-fill"></div></div>
+      <div class="rating" id="rating" aria-live="polite">Waiting for a password</div>
+
+      <h2 class="section-title">Checks</h2>
+      <ul class="checks" id="checks"></ul>
+
+      <h2 class="section-title">Panda's suggestions</h2>
+      <ul class="suggestions" id="suggestions">
+        <li>Start typing to get suggestions.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Your password is checked in memory and never stored, saved, or logged.</p>
+    <p>Crack times assume about 100 billion guesses per second: one high-end GPU attacking a fast MD5 hash.</p>
+    <p>Built by Anthony Brown</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
